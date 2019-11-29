@@ -1,0 +1,41 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  .head-left {
+    display: flex;
+    height: 100%;
+    .head-nav {
+      line-height: 48px;
+      background-color: transparent;
+      .ant-menu-item-selected {
+        background-color: #0482ba;
+        color: #ffffff;
+        border-left-color: rgba(0, 0, 0, 0.1);
+        border-right-color: rgba(0, 0, 0, 0.1);
+        border-top-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  .logo {
+    width: 220px;
+    height: 100%;
+    padding: 0 15px;
+    background-color: aquamarine;
+  }
+  .head-right {
+    padding: 0 20px;
+    cursor: pointer;
+    .head-user {
+      margin-left: 10px;
+    }
+    &:hover {
+      background-color: #0482ba;
+      color: #ffffff;
+      border-left-color: rgba(0, 0, 0, 0.1);
+      border-right-color: rgba(0, 0, 0, 0.1);
+      border-top-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}

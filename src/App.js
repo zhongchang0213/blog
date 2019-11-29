@@ -1,12 +1,11 @@
 import React from 'react';
-import { Button } from 'antd';
+
+import LayoutCon from './components/LayoutCon/LayoutCon'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Button type="primary">hello react</Button>
-      </header>
+      <LayoutCon />
     </div>
   );
 }
