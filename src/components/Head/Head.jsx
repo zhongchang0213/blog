@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
+import { NavLink, withRouter } from 'react-router-dom';
 import { Menu, Icon, Dropdown, Button } from 'antd';
+import { connect } from 'react-redux';
+
+import { showLogin } from '../../redux/action';
+import router from '../../router';
 
 import './Head.less';
 
-export default class Head extends Component {
+class Head extends Component {
 
   state = {
-    current: '1',
     isLogin: false
   };
 
   // 导航
-  handleClick = e => {
-    console.log('click ', e);
-    this.setState({
-      current: e.key,
-    });
+  handleClick = ({ key }) => {
+    this.props.history.push(key);
   };
 
   // 个人中心
@@ -23,8 +24,12 @@ export default class Head extends Component {
     console.log(key)
   }
 
-  render() {
+  // 显示登录
+  login = () => {
+    this.props.showLogin();
+  }
 
+  render() {
     const menu = (
       <Menu onClick={this.user}>
         <Menu.Item key="1">
@@ -37,21 +42,27 @@ export default class Head extends Component {
         </Menu.Item>
       </Menu>
     );
-
+    let { pathname } = this.props.location;
     return (
       <div className='head'>
         <div className='head-left'>
-          <div className="logo"></div>
+          <NavLink to='/'><div className="logo"></div></NavLink>
           <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={['2']}
+            defaultSelectedKeys={[pathname]}
             className='head-nav'
             onClick={this.handleClick}
           >
-            <Menu.Item key="1"><Icon type="mail" />nav 1</Menu.Item>
-            <Menu.Item key="2"><Icon type="mail" />nav 2</Menu.Item>
-            <Menu.Item key="3"><Icon type="mail" />nav 3</Menu.Item>
+            {
+              router.map(item => {
+                return (
+                  <Menu.Item key={item.path}>
+                    <Icon type="mail" />{item.name}
+                  </Menu.Item>
+                );
+              })
+            }
           </Menu>
         </div>
         <div className='head-right'>
@@ -64,7 +75,7 @@ export default class Head extends Component {
                 </div>
               </Dropdown>
             ):(
-              <div>
+              <div onClick={this.login}>
                 <Icon type="mail" />
                 <span className='head-user'>登录</span>
               </div>
@@ -75,3 +86,12 @@ export default class Head extends Component {
     )
   }
 }
+
+export default withRouter(
+  connect(
+    null,
+    {
+      showLogin
+    }
+  )(Head)
+);

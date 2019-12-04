@@ -8,9 +8,11 @@ const { Content, Sider } = Layout;
 export default class Home extends Component {
   render() {
     return (
-      <Layout className={'layout'}>
+      <Layout className={'layout p-20'}>
         <Content>Content</Content>
-        <Sider>
+        <Sider 
+          width='310'
+        >
           <About />
         </Sider>
       </Layout>

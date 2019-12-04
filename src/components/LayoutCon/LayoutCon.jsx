@@ -2,9 +2,9 @@ import React, { Component, Fragment } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Layout } from 'antd';
 
+import router from '../../router';
 import './LayoutCon.less';
 import Head from '../Head/Head';
-import Home from '../../pages/Home/Home';
 
 const { Header, Content, Footer } = Layout;
 
@@ -12,14 +12,20 @@ export default class LayoutCon extends Component {
   render() {
     return (
       <Fragment>
-        <Layout className={'layout'}>
-          <Header  className={'header'}>
+        <Layout className={'pt-48 layout'}>
+          <Header className={'header'}>
             <Head />
           </Header>
-          <Content>
+          <Content className='con'>
             <Switch>
               <Redirect exact path='/' to='/home' />
-              <Route path='/home' component={Home}></Route>
+              {
+                router.map(item => {
+                  return (
+                    <Route key={item.path} path={item.path} component={item.component}></Route>
+                  );
+                })
+              }
             </Switch>
             <Footer>Footer</Footer>
           </Content>
