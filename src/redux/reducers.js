@@ -1,3 +1,5 @@
+import cookie from 'js-cookie';
+
 import { SHOW_LOGIN, HIDE_LOGIN, USER_LOGIN } from './actionType';
 
 // 控制登录注册弹窗
@@ -16,8 +18,8 @@ export const visible = (state=false, action) => {
 export const userInfo = (state={}, action) => {
   switch( action.type ) {
     case USER_LOGIN:
-      return action.data;
+      return {...action.data, isLogin: cookie.get('X-TOKEN')};
     default: 
-      return state;
+      return {...state, isLogin: cookie.get('X-TOKEN')};
   };
 };

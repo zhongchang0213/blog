@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import cookie from 'js-cookie';
 
 import { SHOW_LOGIN, HIDE_LOGIN, USER_LOGIN } from './actionType';
 import { login } from '../apis/user'
@@ -22,17 +22,12 @@ export const user = (data) => ({
 
 export const loginAsync = (data) => {
   return async dispatch => {
-    setTimeout(() => {
-      dispatch(user({
-        name: 'zc'
-      }))
-    },3000)
-    // let res = await login(data);
-    // console.log(res)
-    // if (res) {
-    //   dispatch(user(res));
-    // } else {
-    //   message.error(res);
-    // }
+    let res = await login(data);
+    if (res.status === '1') {
+      cookie.set('X-TOKEN', '12121212', { expires: 7 });
+      dispatch(hideLogin());
+      dispatch(user(res));
+    };
+    return res;
   };
 };

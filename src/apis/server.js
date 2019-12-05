@@ -15,7 +15,7 @@ axios.interceptors.request.use(
 // 返回后拦截
 axios.interceptors.response.use(
   data => {
-    return data;
+    return data.data;
   },
   err => {
     return Promise.reject(err);

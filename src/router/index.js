@@ -16,7 +16,7 @@ const router = [
     icon: ''
   },
   {
-    path: 'article',
+    path: '/article',
     name: '文章',
     component: Articel,
     icon: ''

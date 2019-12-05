@@ -10,10 +10,6 @@ import './Head.less';
 
 class Head extends Component {
 
-  state = {
-    isLogin: false
-  };
-
   // 导航
   handleClick = ({ key }) => {
     this.props.history.push(key);
@@ -43,6 +39,8 @@ class Head extends Component {
       </Menu>
     );
     let { pathname } = this.props.location;
+    let { userInfo } = this.props;
+    console.log(this.props)
     return (
       <div className='head'>
         <div className='head-left'>
@@ -67,7 +65,7 @@ class Head extends Component {
         </div>
         <div className='head-right'>
           {
-            this.isLogin?(
+            userInfo.isLogin?(
               <Dropdown overlay={menu}>
                 <div>
                   <Icon type="mail" />
@@ -89,7 +87,7 @@ class Head extends Component {
 
 export default withRouter(
   connect(
-    null,
+    (state) => state,
     {
       showLogin
     }

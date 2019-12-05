@@ -27,8 +27,8 @@ export default class LayoutCon extends Component {
                 })
               }
             </Switch>
-            <Footer>Footer</Footer>
           </Content>
+          <Footer>Footer</Footer>
         </Layout>
       </Fragment>
     )
