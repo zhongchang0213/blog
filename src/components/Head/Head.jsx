@@ -1,14 +1,30 @@
 import React, { Component } from 'react'
 import { NavLink, withRouter } from 'react-router-dom';
-import { Menu, Icon, Dropdown, Button } from 'antd';
+import { Menu, Icon, Dropdown, Button, Modal, message } from 'antd';
 import { connect } from 'react-redux';
+import cookie from 'js-cookie';
 
-import { showLogin } from '../../redux/action';
+import { showLogin, userLoginOut, userLogin } from '../../redux/action';
 import router from '../../router';
+import { loginOut, userInfo } from '../../apis/user'
 
 import './Head.less';
 
+const { confirm } = Modal;
+
 class Head extends Component {
+
+  constructor(props) {
+    super(props)
+    if (cookie.get('X-TOKEN')) this.getUserInfo();
+  }
+
+  async getUserInfo() {
+    let res = await userInfo();
+    if (res.status === '1') {
+      this.props.userLogin(res.data);
+    } 
+  }
 
   // 导航
   handleClick = ({ key }) => {
@@ -17,7 +33,29 @@ class Head extends Component {
 
   // 个人中心
   user = ({ key }) => {
-    console.log(key)
+    if (key === '1') {
+      confirm({
+        cancelText: '取消',
+        okText: '确认',
+        title: '确认退出登录?',
+        onOk: async () => {
+          console.log('OK');
+          const res = await loginOut();
+          const { status, message: msg } = res;
+          if ( status === '1' ) {
+            message.success(msg);
+            cookie.remove('X-TOKEN');
+            this.props.userLoginOut();
+            console.log(this.props)
+          } else {
+            message.error(msg);
+          }
+          console.log(res)
+        }
+      });
+    } else {
+
+    };
   }
 
   // 显示登录
@@ -28,11 +66,11 @@ class Head extends Component {
   render() {
     const menu = (
       <Menu onClick={this.user}>
-        <Menu.Item key="1">
+        <Menu.Item key="0">
           <Icon type="mail" />
           <Button type='link'>个人中心</Button>
         </Menu.Item>
-        <Menu.Item key="2">
+        <Menu.Item key="1">
           <Icon type="mail" />
           <Button type='link'>退出</Button>
         </Menu.Item>
@@ -40,7 +78,6 @@ class Head extends Component {
     );
     let { pathname } = this.props.location;
     let { userInfo } = this.props;
-    console.log(this.props)
     return (
       <div className='head'>
         <div className='head-left'>
@@ -69,7 +106,7 @@ class Head extends Component {
               <Dropdown overlay={menu}>
                 <div>
                   <Icon type="mail" />
-                  <span className='head-user'>用户xx</span>
+                  <span className='head-user'>{userInfo.userName}</span>
                 </div>
               </Dropdown>
             ):(
@@ -89,7 +126,9 @@ export default withRouter(
   connect(
     (state) => state,
     {
-      showLogin
+      showLogin,
+      userLoginOut,
+      userLogin
     }
   )(Head)
 );

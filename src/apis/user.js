@@ -7,3 +7,11 @@ export const register = (data) => {
 export const login = (data) => {
   return axios.post('/user/login', data);
 };
+
+export const loginOut = () => {
+  return axios.post('/user/loginOut');
+};
+
+export const userInfo = () => {
+  return axios.get('/user/userInfo');
+};

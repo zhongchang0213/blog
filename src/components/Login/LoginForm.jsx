@@ -58,7 +58,6 @@ class LoginForm extends Component {
           userName,
           password
         });
-        console.log(res)
         let { status, message: msg } = res;
         if ( status === '1' ) {  // 注册成功
           this.props.form.resetFields();

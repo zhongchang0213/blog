@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Form, Input, Button, Upload, Icon, message } from 'antd';
 
 import './UserInfo.less';
@@ -12,21 +13,18 @@ function getBase64(img, callback) {
 }
 
 function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
   const isLt1M = file.size / 1024 / 1024 < 1;
   if (!isLt1M) {
     message.error('Image must smaller than 2MB!');
   }
-  return isJpgOrPng && isLt1M;
+  return isLt1M;
 }
 
-export default class UserInfo extends Component {
+class UserInfo extends Component {
 
   state = {
     loading: false,
+    isEdit: false,
     imageUrl: require('../../assets/images/user.jpg')
   };
 
@@ -46,9 +44,16 @@ export default class UserInfo extends Component {
     }
   };
 
+  operating = () => {
+    let { isEdit } = this.state;
+    this.setState({
+      isEdit: !isEdit
+    })
+  }
+
   render() {
-    const { imageUrl } = this.state;
-    console.log(imageUrl)
+    const { imageUrl, isEdit } = this.state;
+    const { userInfo } = this.props;
     return (
       <div>
         <Form 
@@ -67,14 +72,15 @@ export default class UserInfo extends Component {
           >
             <div className='user-info'>
               <div className='user'>
-                <div className='user-name font-b'>序幕</div>
+                <div className='user-name font-b'>{userInfo.userName}</div>
                 <div className="user-create-time">
                   <Icon type="user-add" />
-                  2019-12-12
+                  {userInfo.created}
                 </div>
               </div>
               <div className="user-avatar">
                 <Upload
+                  accept='image/*'
                   name="avatar"
                   listType="picture"
                   className="avatar-uploader"
@@ -89,23 +95,55 @@ export default class UserInfo extends Component {
             </div>
           </Form.Item>
           <Form.Item label="个性签名">
-            <TextArea rows={4} allowClear placeholder="input placeholder" />
+            {
+              isEdit?(
+                <TextArea rows={4} allowClear placeholder="input placeholder" />
+              ):(
+                <p>{userInfo.status}</p>
+              )
+            }
           </Form.Item>
           <Form.Item label="手机号">
-            <Input placeholder="input placeholder" />
+            {
+              isEdit?(
+                <Input placeholder="input placeholder" />
+              ):(
+                <p>{userInfo.tel}</p>
+              )
+            }
           </Form.Item>
-          <Form.Item label="修改密码">
-            <Input placeholder="初始密码" />
-            <Input placeholder="新密码" />
-            <Input placeholder="重复密码" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary">
-              编辑
-            </Button>
+          {
+            isEdit?(
+              <Form.Item label="修改密码">
+                <Input placeholder="初始密码" />
+                <Input placeholder="新密码" />
+                <Input placeholder="重复密码" />
+              </Form.Item>
+            ):null
+          }
+          <Form.Item wrapperCol={{
+              span: 24
+            }}>
+            <div className='operating-box'>
+              {
+                isEdit?(
+                  <Button type="primary">
+                    取消
+                  </Button>
+                ):null
+              }
+              <Button type="primary" onClick={this.operating}>
+                {isEdit?'保存':'编辑'}
+              </Button>
+            </div>
           </Form.Item>
         </Form>
       </div>
     )
   }
 }
+
+export default connect(
+  (state) => state,
+  {}
+)(UserInfo);
